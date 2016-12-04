@@ -1,0 +1,126 @@
+<div class="page-title">
+    <div class="title_left">
+        <h3>La liste des sociétés</h3>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div>
+            <button class="btn btn-success pull-right" data-toggle="modal" data-target="#addModal">Ajouter une société
+            </button>
+            <div class="input-group">
+                <input type="text" class="form-control" style="border-radius: 10px;" placeholder="Recherche" ng-model="search">
+            </div>
+        </div>
+        <table id="admins" class="table table-striped responsive-utilities jambo_table table-responsive">
+            <thead>
+            <tr class="headings">
+                <th>Nom</th>
+                <th>Administré</th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr class="even pointer" ng-repeat="societe in societes | filter:search">
+                <td>{{societe.nom}}</td>
+                <td>
+                    <i class="glyphicon glyphicon-check text-success" ng-show="societe.administre"></i>
+                    <i class="glyphicon glyphicon-alert text-danger" ng-hide="societe.administre"></i>
+                </td>
+                <td>
+                    <button class="btn btn-primary" data-toggle="modal" ng-click="selectSociete(societe)"
+                            data-target="#updateModal">Modifier
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-dark" data-toggle="modal" ng-click="bloquer(societe)"
+                            ng-show="societe.active">Bloquer
+                    </button>
+                    <button class="btn btn-success" data-toggle="modal" ng-click="debloquer(societe)"
+                            ng-show="!societe.active">Débloquer
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" data-toggle="modal" ng-click="selectSociete(societe)"
+                            data-target="#deleteModal">Supprimer
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="deleteModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="deleteModal12">Supprimer la société</h4>
+            </div>
+            <div class="modal-body">
+                <div align="center">
+                    <button class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                    <button class="btn btn-primary" ng-click="delete(selectedSociete)" data-dismiss="modal">Confirmer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="updateModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="updateModall2">Modifier la société</h4>
+            </div>
+            <div class="modal-body">
+                <form name="frm" id="frm2">
+                    <input type="text" ng-model="oldSociete.nom" class="form-control" autofocus required
+                           placeholder="Nom de la société"/><br>
+                    <button class="btn btn-success" ng-click="update(oldSociete)" data-dismiss="modal"
+                            ng-disabled="frm2.$invalid">Valider
+                    </button>
+                    <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="addModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="addModall2">Ajouter une société</h4>
+            </div>
+            <div class="modal-body">
+                <form name="frm" id="frm3">
+                    <input type="text" ng-model="societe.nom" class="form-control" autofocus required
+                           placeholder="Nom de la société"/><br>
+                    <button class="btn btn-success" ng-click="add(societe)" data-dismiss="modal"
+                            ng-disabled="frm3.$invalid">Valider
+                    </button>
+                    <button class="btn btn-default" data-dismiss="modal">Annuler</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

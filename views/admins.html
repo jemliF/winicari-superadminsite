@@ -1,0 +1,307 @@
+<div class="page-title">
+    <div class="title_left">
+        <h3>La liste des administrateurs</h3>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div class="row">
+
+    <div class="col-md-12 col-sm-12 col-xs-12">
+        <div>
+            <button class="btn btn-success pull-right" data-toggle="modal" data-target="#addModal">Ajouter un
+                administrateur
+            </button>
+            <div class="input-group">
+                <input type="text" class="form-control" style="border-radius: 10px;" placeholder="Recherche" ng-model="search">
+            </div>
+        </div>
+        <table id="admins" class="table table-striped responsive-utilities jambo_table table-responsive">
+            <thead>
+            <tr class="headings">
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Société</th>
+                <th style="width: auto;"></th>
+                <th style="width: auto;"></th>
+                <th style="width: auto;"></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr class="even pointer" ng-repeat="admin in admins | filter:search">
+                <td>{{admin.nom}}</td>
+                <td>{{admin.prenom}}</td>
+                <td>{{admin.email}}</td>
+                <td>{{admin.tel}}</td>
+                <td>{{admin.societe.nom}}</td>
+                <td>
+                    <button class="btn btn-primary" data-toggle="modal" ng-click="selectAdmin(admin)"
+                            data-target="#updateModal">Modifier
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-dark" data-toggle="modal" ng-click="bloquer(admin)"
+                            ng-show="admin.active">Bloquer
+                    </button>
+                    <button class="btn btn-success" data-toggle="modal" ng-click="debloquer(admin)"
+                            ng-show="!admin.active">Débloquer
+                    </button>
+                </td>
+                <td>
+                    <button class="btn btn-danger" data-toggle="modal" ng-click="selectAdmin(admin)"
+                            data-target="#deleteModal">Supprimer
+                    </button>
+                </td>
+            </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<div class="modal fade bs-example-modal-lg" id="addModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabelAdd">Modifier administrateur</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Les champs avec (*) sont obligatoires</p>
+                <form class="form-horizontal form-label-left" name="frmAdd">
+                    <span class="section">L'administrateur</span>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Nom <span
+                                class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="nomAdd" class="form-control col-md-7 col-xs-12" data-validate-length-range="6"
+                                   autofocus ng-model="admin.nom"
+                                   data-validate-words="2" name="nom" placeholder="Nom"
+                                   required type="text">
+                            <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                        <div class="alert">Les champs avec (*) sont obligatoires</div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Prénom <span
+                                class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="prenomAdd" class="form-control col-md-7 col-xs-12" data-validate-length-range="6"
+                                   ng-model="admin.prenom"
+                                   data-validate-words="2" name="prenom" placeholder="Prénom"
+                                   resuired type="text">
+                            <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span
+                                class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="email" id="emailAdd" name="email" required placeholder="Email"
+                                   ng-model="admin.email"
+                                   class="form-control col-md-7 col-xs-12">
+                            <span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+                            <span class="text-danger"
+                                  ng-show="frmAdd.emailAdd.$dirty && frmAdd.emailAdd.$error.email">Email invalide!</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-3">Téléphone</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control" data-inputmask="'mask': '99-999999'" required
+                                   name="tel" id="telAdd" placeholder="Téléphone" ng-model="admin.tel">
+                            <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+                            <span class="text-danger"
+                                  ng-show="frmAdd.telAdd.$dirty && frmAdd.telAdd.$error.tel">Numéro de tél invalide!</span>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label for="passwordAdd" class="control-label col-md-3">Mot de passe <span
+                                class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="passwordAdd" type="password" name="password" data-validate-length="6,8"
+                                   placeholder="Mot de passe" ng-model="admin.password"
+                                   class="form-control col-md-7 col-xs-12" required>
+                            <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label for="password2Add" class="control-label col-md-3 col-sm-3 col-xs-12">Retapez le mot de
+                            passe
+                            <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="password2Add" type="password" name="password2" data-validate-linked="password"
+                                   ng-model="password2"
+                                   placeholder="Retapez mot de passe"
+                                   class="form-control col-md-7 col-xs-12" required>
+                            <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                            <span class="text-danger" ng-show="admin.password != password2 && password2">Mots de passe ne sont pas identiques!</span>
+                        </div>
+                    </div>
+                    <span class="section">Société</span>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="societes">Nom de la société <span
+                                class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="societesAdd" name="societes"
+                                    ng-options="societe as societe.nom disable when societe.administre for societe in societes track by societe.id"
+                                    ng-model="admin.societe"
+                                    options-disabled="societe.administre for societe in societes track by societe.id"
+                                    required style="height: 30px;width: 100%;"></select>
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button type="reset" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+                            <button id="sendAdd" type="submit" class="btn btn-success" ng-click="add(admin)"
+                                    ng-disabled="frmAdd.$invalid" data-dismiss="modal">Valider
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade bs-example-modal-lg" id="updateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Modifier administrateur</h4>
+            </div>
+            <div class="modal-body">
+                <p class="text-danger">Les champs avec (*) sont obligatoires!</p>
+                <form class="form-horizontal form-label-left" name="frm">
+                    <span class="section">L'administrateur</span>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Nom <span
+                                class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="nom" class="form-control col-md-7 col-xs-12" data-validate-length-range="6"
+                                   autofocus ng-model="oldAdmin.nom"
+                                   data-validate-words="2" name="nom" placeholder="Nom"
+                                   required type="text">
+                            <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                        <div class="alert">Les champs avec (*) sont obligatoires!</div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nom">Prénom <span
+                                class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="prenom" class="form-control col-md-7 col-xs-12" data-validate-length-range="6"
+                                   ng-model="oldAdmin.prenom"
+                                   data-validate-words="2" name="prenom" placeholder="Prénom"
+                                   resuired type="text">
+                            <span class="fa fa-user form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Email <span
+                                class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="email" id="email" name="email" required placeholder="Email"
+                                   ng-model="oldAdmin.email"
+                                   class="form-control col-md-7 col-xs-12">
+                            <span class="fa fa-envelope form-control-feedback right" aria-hidden="true"></span>
+                            <span class="text-danger"
+                                  ng-show="frm.email.$dirty && frm.email.$error.email">Email invalide!</span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-3">Téléphone</label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input type="text" class="form-control" data-inputmask="'mask': '99-999999'" required
+                                   name="tel" id="tel" placeholder="Téléphone" ng-model="oldAdmin.tel">
+                            <span class="fa fa-phone form-control-feedback right" aria-hidden="true"></span>
+                            <span class="text-danger"
+                                  ng-show="frm.tel.$dirty && frm.tel.$error.tel">Numéro de tél invalide!</span>
+                        </div>
+                    </div>
+                    <!--div class="item form-group">
+                        <label for="password" class="control-label col-md-3">Mot de passe <span
+                                class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="password" type="password" name="password" data-validate-length="6,8"
+                                   placeholder="Mot de passe" ng-model="oldAdmin.password"
+                                   class="form-control col-md-7 col-xs-12" required>
+                            <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                        </div>
+                    </div>
+                    <div class="item form-group">
+                        <label for="password2" class="control-label col-md-3 col-sm-3 col-xs-12">Retapez le mot de passe
+                            <span class="required text-danger">*</span></label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <input id="password2" type="password" name="password2" data-validate-linked="password"
+                                   ng-model="password2"
+                                   placeholder="Retapez mot de passe"
+                                   class="form-control col-md-7 col-xs-12" required>
+                            <span class="fa fa-lock form-control-feedback right" aria-hidden="true"></span>
+                            <span class="text-danger" ng-show="selectedAdmin.password != password2 && password2">Mots de passe ne sont pas identiques!</span>
+                        </div>
+                    </div-->
+                    <span class="section">Société</span>
+                    <div class="item form-group">
+                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="societes">Nom de la société <span
+                                class="required text-danger">*</span>
+                        </label>
+                        <div class="col-md-6 col-sm-6 col-xs-12">
+                            <select id="societes" name="societes"
+                                    ng-options="societe as societe.nom disable when societe.administre for societe in societes track by societe.id"
+                                    ng-model="oldAdmin.societe"
+                                    options-disabled="societe.administre for societe in societes track by societe.id"
+                                    required style="height: 30px;width: 100%;"></select>
+                        </div>
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div class="form-group">
+                        <div class="col-md-6 col-md-offset-3">
+                            <button type="reset" class="btn btn-primary" data-dismiss="modal">Annuler</button>
+                            <button id="send" type="submit" class="btn btn-success" ng-click="update(oldAdmin)"
+                                    ng-disabled="frm.$invalid" data-dismiss="modal">Valider
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-hidden="true" id="deleteModal">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel2">Supprimer {{oldAdmin.nom}}&nbsp;{{oldAdmin.prenom}}</h4>
+            </div>
+            <div class="modal-body">
+                <div align="center">
+                    <button class="btn btn-danger" data-dismiss="modal">Annuler</button>
+                    <button class="btn btn-primary" ng-click="delete(oldAdmin)" data-dismiss="modal">Confirmer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
